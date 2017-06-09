@@ -59,6 +59,7 @@ public class WaterWalkCheck {
 									if (v >= AntiCheat.getManager().getBackend().getMagic()
 											.WATER_SPEED_VIOLATION_MAX()) {
 										waterSpeedViolation.put(uuid, 0);
+										AntiCheat.sendToStaff(ChatColor.RED + player.getName() + " failed WaterWalk!");
 										return new CheckResult(CheckResult.Result.FAILED,
 												player.getName() + " stood on water " + v + " times (can't stand on "
 														+ block.getType() + " or "
