@@ -51,6 +51,7 @@ public class GlideCheck {
 					player.teleport(to);
 					// Report glide violation to statistics, just for the lulz jk
 					AntiCheat.getPlugin().onGlideViolation();
+					AntiCheat.sendToStaff(ChatColor.RED + player.getName() + " failed Glide!");
 					return new CheckResult(CheckResult.Result.FAILED,
 							player.getName() + " was set back for gliding (yDiff=" + new BigDecimal(yDiff).setScale(2, BigDecimal.ROUND_UP) + ")");
 				} else {
