@@ -302,4 +302,10 @@ public class AntiCheat extends JavaPlugin {
 		}
 	}
 	
+	public static void removeFromStaff(Player player) {
+		if(onlineStaff.contains(player)) {
+			onlineStaff.remove(player);
+		}
+	}
+	
 }
