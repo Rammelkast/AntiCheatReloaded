@@ -20,6 +20,7 @@ public class CriticalsCheck {
 		if (isCritical(p)) {
 			if ((p.getLocation().getY() % 1.0 == 0 || p.getLocation().getY() % 0.5 == 0) && p.getLocation().clone().subtract(0, 1.0, 0).getBlock().getType().isSolid()) {
 				e.setCancelled(true);
+				AntiCheat.sendToStaff(ChatColor.RED + player.getName() + " failed Criticals!");
 				EventListener.log(new CheckResult(CheckResult.Result.FAILED, p.getName() + " failed Criticals, tried to do a critical without needed conditions").getMessage(), p, CheckType.CRITICALS);
 			}
 		}
