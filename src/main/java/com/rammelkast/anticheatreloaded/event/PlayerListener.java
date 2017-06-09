@@ -473,4 +473,12 @@ public class PlayerListener extends EventListener {
             }
         }
     }
+    
+    @EventHandler
+    public void onPlayerJoinEvent(PlayerJoinEvent e) {
+        Player player = e.getPlayer();
+        if(player.hasPermission("anticheat.mod")) {
+            AntiCheat.addToStaff(player);
+        }
+    }
 }
