@@ -56,6 +56,7 @@ public class KillAuraCheck {
 				}else {
 					VL_COUNT.put(p.getUniqueId(), VL_COUNT.get(p.getUniqueId()) + 1);
 					if (VL_COUNT.get(p.getUniqueId()) >= 5) {
+						AntiCheat.sendToStaff(ChatColor.RED + player.getName() + " failed KillAura!");
 						EventListener.log(new CheckResult(CheckResult.Result.FAILED, p.getName() + " failed KillAura (botcheck), hit the bot " + VL_COUNT.get(p.getUniqueId()) + " times (max=5)").getMessage(), p, CheckType.KILLAURA);
 						AntiCheat.getPlugin().onKillAuraViolation();
 						VL_COUNT.remove(p.getUniqueId());
