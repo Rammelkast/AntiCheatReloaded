@@ -53,7 +53,8 @@ public class AntiCheat extends JavaPlugin {
 	private static boolean developer;
 	private static ProtocolManager protocolManager;
 	private static Long loadTime;
-
+	private static List<Player> onlineStaff = new ArrayList<Player>();
+	
 	@Override
 	public void onEnable() {
 		plugin = this;
@@ -291,4 +292,14 @@ public class AntiCheat extends JavaPlugin {
 		this.killauraViolations++;
 	}
 
+	public static void addToStaff(Player player) {
+		onlineStaff.add(player);
+	}
+	
+	public static void sendToStaff(String message) {
+		for(Player player : onlineStaff) {
+			player.sendMessage(message);
+		}
+	}
+	
 }
