@@ -53,6 +53,7 @@ public class FlightCheck {
 
 			if (blocksOverFlight.get(uuid) > AntiCheat.getManager().getBackend().getMagic().FLIGHT_BLOCK_LIMIT()
 					&& (y1 <= y2)) {
+				AntiCheat.sendToStaff(ChatColor.RED + player.getName() + " failed Fly!");
 				return new CheckResult(CheckResult.Result.FAILED,
 						player.getName() + " flew over " + blocksOverFlight.get(uuid) + " blocks (max="
 								+ AntiCheat.getManager().getBackend().getMagic().FLIGHT_BLOCK_LIMIT() + ")");
