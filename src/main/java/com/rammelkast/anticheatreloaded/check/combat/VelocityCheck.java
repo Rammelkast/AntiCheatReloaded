@@ -37,6 +37,7 @@ public class VelocityCheck {
 					else {
 						VL_COUNT.put(p.getUniqueId(), VL_COUNT.get(p.getUniqueId()) + 1);
 						if (VL_COUNT.get(p.getUniqueId()) > AntiCheat.getManager().getBackend().getMagic().VELOCITY_AMT()) {
+							AntiCheat.sendToStaff(ChatColor.RED + player.getName() + " failed Velocity!");
 							EventListener.log(new CheckResult(CheckResult.Result.FAILED, p.getName() + " failed Velocity, had zero/low velocity " + VL_COUNT.get(p.getUniqueId()) + " times (max=" + AntiCheat.getManager().getBackend().getMagic().VELOCITY_AMT() + ", dist=" + then.distance(p.getLocation()) + ")").getMessage(), p, CheckType.VELOCITY);
 							VL_COUNT.remove(p.getUniqueId());
 						}
