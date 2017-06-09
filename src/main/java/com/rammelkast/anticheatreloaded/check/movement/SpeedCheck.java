@@ -60,6 +60,7 @@ public class SpeedCheck {
 				int num = AntiCheat.getManager().getBackend().increment(player, speedViolation,
 						AntiCheat.getManager().getBackend().getMagic().SPEED_MAX());
 				if (num >= AntiCheat.getManager().getBackend().getMagic().SPEED_MAX()) {
+					AntiCheat.sendToStaff(ChatColor.RED + player.getName() + " was too fast " + reason + "!");
 					return new CheckResult(CheckResult.Result.FAILED,
 							player.getName() + "'s speed was too high " + reason + num + " times in a row (max="
 									+ AntiCheat.getManager().getBackend().getMagic().SPEED_MAX() + ", speed="
