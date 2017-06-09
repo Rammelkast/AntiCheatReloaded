@@ -192,7 +192,9 @@ public class PlayerListener extends EventListener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         getBackend().garbageClean(event.getPlayer());
-
+        
+        AntiCheat.removeFromStaff(event.getPlayer());
+        
         User user = getUserManager().getUser(event.getPlayer().getUniqueId());
 
         getConfig().getLevels().saveLevelFromUser(user);
