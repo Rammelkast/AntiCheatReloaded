@@ -3,7 +3,7 @@ AntiCheatReloaded
 AntiCheatReloaded is a fork of the old 'AntiCheat' project.
 AntiCheat helps server admins easily identify and block malicious users by monitoring and analyzing the behaviour of their players.
 
-###Want to help me out?
+### Want to help me out?
 First of all, i've put a lot of time and work in this project, so donations (especially in (m)BTC) are appreciated!
 My BTC address is 1JfyX6hvGUazHTtKVLaNcYaUxnyjR5HtMY
 
@@ -23,7 +23,7 @@ Usage
 -------
 Simply drag and drop the plugin and the ProtoclLib into your Plugins folder.
 
-###Hacks blocked
+### Hacks blocked
 -------
 * Blink
 * Flight
