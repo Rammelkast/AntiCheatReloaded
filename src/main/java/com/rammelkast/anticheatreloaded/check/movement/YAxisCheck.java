@@ -64,6 +64,7 @@ public class YAxisCheck {
 							player.teleport(g);
 						}
 					}
+					AntiCheat.sendToStaff(ChatColor.RED + player.getName() + " failed Fly!");
 					return new CheckResult(CheckResult.Result.FAILED,
 							player.getName() + " tried to fly on y-axis " + yAxisViolations.get(uuid) + " times (max ="
 									+ AntiCheat.getManager().getBackend().getMagic().Y_MAXVIOLATIONS() + ")");
