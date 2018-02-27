@@ -9,7 +9,7 @@ commands:
   anticheat:
     description: Control and view info about AntiCheat
     usage: /anticheat help
-    aliases: anti
+    aliases: [anti, ac, antic, acheat]
 permissions:
   anticheat.system.notice:
     description: See broadcasts when a player is kicked or banned for hacking
