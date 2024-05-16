@@ -1,0 +1,17 @@
+name: AntiCheatReloaded
+author: Rammelkast
+description: The free anti-cheat since 2016
+version: ${project.build.version}
+website: https://github.com/Rammelkast/AntiCheatReloaded
+main: com.rammelkast.anticheatreloaded.AntiCheatReloaded
+api-version: 1.20
+depend: [ProtocolLib]
+softdepend:
+  - Geyser-Spigot
+  - Floodgate
+  - floodgate
+commands:
+  anticheatreloaded:
+    description: Control and view info about AntiCheatReloaded
+    usage: /acr help
+    aliases: acr
