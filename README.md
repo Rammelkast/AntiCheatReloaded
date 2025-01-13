@@ -4,8 +4,7 @@ Development branch for the v2 recode of AntiCheatReloaded. No support or definit
 
 Installation
 ------------
-AntiCheatReloaded **requires** you to have ProtocolLib installed on your server, as we use it to enable AntiCheatReloaded to work at the packet level. You can download it [here](https://github.com/dmulloy2/ProtocolLib/releases).
-Simply drag and drop the AntiCheatReloaded and ProtocolLib jars in your plugin folder.
+Make sure that AntiCheatReloaded supports your server version and implementation. Simply drag and drop the AntiCheatReloaded jar in your plugins folder and restart your server.
 
 Issue Reporting
 ------------
@@ -14,7 +13,6 @@ Issues should be filed by hitting the [issues](https://github.com/Rammelkast/Ant
 Please include the following information with your issue:
 * Your AntiCheatReloaded version
 * Your server implementation (Bukkit/Spigot/Other) and it's version
-* Your ProtocolLib version
 * Whether or not you are using protocol hacks (ViaVersion etc.)
 * Any logs, images or videos relating to the issue
 

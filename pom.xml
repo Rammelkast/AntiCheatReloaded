@@ -1,171 +1,157 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-	xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.rammelkast.anticheatreloaded</groupId>
-	<artifactId>AntiCheatReloaded</artifactId>
-	<version>2.0.0-pre1</version>
-	<packaging>jar</packaging>
+
 	<name>AntiCheatReloaded</name>
-	<description>The free anti-cheat since 2016</description>
-	<url>https://github.com/Rammelkast/AntiCheatReloaded</url>
+	<groupId>com.rammelkast</groupId>
+	<artifactId>anticheatreloaded</artifactId>
+	<version>2.0.0+dev</version>
+	<packaging>jar</packaging>
+
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.build.version>${project.version}</project.build.version>
+		<!-- Target Java Version: 21 (LTS) -->
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
+
+		<project.build.version>${project.version}</project.build.version>
+
+		<library.spigot.version>1.21.4</library.spigot.version>
+		<library.bstats.version>3.1.0</library.bstats.version>
+		<library.lombok.version>1.18.36</library.lombok.version>
+		<library.packetevents.version>2.7.0</library.packetevents.version>
+		<library.geysermc.version>2.4.2-SNAPSHOT</library.geysermc.version>
+
+		<package.main>com.rammelkast.anticheatreloaded</package.main>
+		<package.shade>${package.main}.shaded</package.shade>
+
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+
 	<licenses>
 		<license>
 			<name>GNU General Public License v3.0</name>
 			<url>https://www.gnu.org/licenses/gpl-3.0.en.html</url>
 		</license>
 	</licenses>
-	<repositories>
-		<repository>
-			<id>opencollab-snapshot</id>
-			<url>https://repo.opencollab.dev/main/</url>
-		</repository>
-		<repository>
-			<id>codemc-releases</id>
-			<url>https://repo.codemc.io/repository/maven-releases/</url>
-		</repository>
-		<repository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
-		</repository>
-		<repository>
-			<id>pledge-repo</id>
-			<url>https://raw.github.com/ThomasOM/Pledge/repository/</url>
-		</repository>
-	</repositories>
-	<dependencies>
-		<dependency>
-			<groupId>org.bstats</groupId>
-			<artifactId>bstats-bukkit</artifactId>
-			<version>3.0.2</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>de.exlll</groupId>
-			<artifactId>configlib-yaml</artifactId>
-			<version>4.5.0</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.geysermc.geyser</groupId>
-			<artifactId>api</artifactId>
-			<version>2.2.0-SNAPSHOT</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot</artifactId>
-			<version>1.20.4-R0.1-SNAPSHOT</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>dev.thomazz</groupId>
-			<artifactId>pledge</artifactId>
-			<version>3.3</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.cryptomorin</groupId>
-			<artifactId>XSeries</artifactId>
-			<version>10.0.0</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>club.minnced</groupId>
-			<artifactId>discord-webhooks</artifactId>
-			<version>0.8.4</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.18.32</version>
-			<scope>provided</scope>
-		</dependency>
-	</dependencies>
+
 	<build>
-		<sourceDirectory>${basedir}/src/main/java</sourceDirectory>
-		<plugins>
-			<plugin>
-				<artifactId>maven-clean-plugin</artifactId>
-				<version>3.3.2</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.12.1</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.5.2</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<minimizeJar>true</minimizeJar>
-							<createDependencyReducedPom>false</createDependencyReducedPom>
-							<relocations>
-								<relocation>
-									<pattern>org.bstats</pattern>
-									<shadedPattern>com.rammelkast.anticheatreloaded.shade.metrics</shadedPattern>
-								</relocation>
-								<relocation>
-									<pattern>de.exlll.configlib</pattern>
-									<shadedPattern>com.rammelkast.anticheatreloaded.shade.configlib</shadedPattern>
-								</relocation>
-								<relocation>
-									<pattern>dev.thomazz.pledge</pattern>
-									<shadedPattern>com.rammelkast.anticheatreloaded.shade.pledge</shadedPattern>
-								</relocation>
-								<relocation>
-									<pattern>com.cryptomorin.xseries</pattern>
-									<shadedPattern>com.rammelkast.anticheatreloaded.shade.xseries</shadedPattern>
-								</relocation>
-								<relocation>
-									<pattern>club.minnced.discord.webhook</pattern>
-									<shadedPattern>com.rammelkast.anticheatreloaded.shade.discord</shadedPattern>
-								</relocation>
-							</relocations>
-							<filters>
-								<filter>
-									<artifact>com.github.cryptomorin:XSeries</artifact>
-									<includes>
-										<include>com/cryptomorin/xseries/XMaterial*</include>
-										<include>com/cryptomorin/xseries/XPotion*</include>
-										<include>com/cryptomorin/xseries/XEntity*</include>
-										<include>com/cryptomorin/xseries/ReflectionUtils*</include>
-									</includes>
-								</filter>
-							</filters>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-		<finalName>${project.name}</finalName>
-		<extensions>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-file</artifactId>
-				<version>3.5.3</version>
-			</extension>
-		</extensions>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
 		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.13.0</version>
+				<configuration>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.4.2</version>
+				<configuration>
+					<outputDirectory>target</outputDirectory>
+					<excludes>
+						<exclude>META-INF/com.rammelkast/anticheatreloaded/pom*</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.6.0</version>
+				<configuration>
+					<minimizeJar>true</minimizeJar>
+					<relocations>
+						<relocation>
+							<pattern>org.bstats</pattern>
+							<shadedPattern>${package.shade}.metrics</shadedPattern>
+						</relocation>
+						<relocation>
+							<pattern>com.github.retrooper.packetevents</pattern>
+							<shadedPattern>${package.shade}.packetevents</shadedPattern>
+						</relocation>
+						<relocation>
+							<pattern>io.github.retrooper.packetevents</pattern>
+							<shadedPattern>${package.shade}.packetevents</shadedPattern>
+						</relocation>
+					</relocations>
+					<filters>
+						<filter>
+							<artifact>*:*</artifact>
+							<excludes>
+								<exclude>META-INF/maven/com.rammelkast/anticheatreloaded/pom.xml</exclude>
+							</excludes>
+						</filter>
+					</filters>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<phase>package</phase>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<finalName>${project.name}-${project.version}</finalName>
 	</build>
+
+	<repositories>
+		<repository>
+			<id>codemc-releases</id>
+			<url>https://repo.codemc.io/repository/maven-releases/</url>
+		</repository>
+		<repository>
+			<id>codemc-snapshots</id>
+			<url>https://repo.codemc.io/repository/maven-snapshots/</url>
+		</repository>
+		<repository>
+			<id>opencollab-snapshot</id>
+			<url>https://repo.opencollab.dev/main/</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot-api</artifactId>
+			<version>${library.spigot.version}-R0.1-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.bstats</groupId>
+			<artifactId>bstats-bukkit</artifactId>
+			<version>${library.bstats.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${library.lombok.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.geysermc.geyser</groupId>
+			<artifactId>api</artifactId>
+			<version>${library.geysermc.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.retrooper</groupId>
+			<artifactId>packetevents-spigot</artifactId>
+			<version>${library.packetevents.version}</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+
 </project>

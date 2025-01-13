@@ -21,13 +21,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.event.EventManager;
+import com.github.retrooper.packetevents.event.PacketListenerPriority;
+import com.rammelkast.anticheatreloaded.client.ClientManager;
+import com.rammelkast.anticheatreloaded.protocol.PacketLoginLogoutListener;
+import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import com.cryptomorin.xseries.ReflectionUtils;
 
 import lombok.Getter;
 
@@ -42,10 +46,8 @@ public final class AntiCheatReloaded extends JavaPlugin {
 	 * List of supported NMS versions
 	 */
 	private static final List<String> SUPPORTED_VERSIONS = Arrays.asList(new String[] {
-		// 1.20.x
-		"1.20.R1",
-		"1.20.R2",
-		"1.20.R3"
+		// 1.21.4
+		"1.21.4/R0.1",
 	});
 	/**
 	 * Plugin Id for bStats metrics
@@ -55,6 +57,7 @@ public final class AntiCheatReloaded extends JavaPlugin {
 	/**
 	 * Plugin instance
 	 */
+	@Getter
 	private static AntiCheatReloaded instance;
 
 	/**
@@ -66,24 +69,36 @@ public final class AntiCheatReloaded extends JavaPlugin {
 	 */
 	@Getter
 	private static boolean usingFloodgateSupport;
+
+	@Getter
+	private ClientManager clientManager;
 	
 	@Override
 	public void onLoad() {
 		instance = this;
-		
-		// Check if ProtocolLib is available on the server
-		if (Bukkit.getPluginManager().getPlugin("ProtocolLib") == null) {
-			Bukkit.getConsoleSender().sendMessage(MESSAGE_PREFIX + ChatColor.RED
-					+ "Could not find ProtocolLib! AntiCheatReloaded requires ProtocolLib to work, please download and install it.");
-			Bukkit.getPluginManager().disablePlugin(this);
-			return;
-		}
-		
+
+		this.clientManager = new ClientManager();
+
+		// Load our PacketEvents
+		loadPacketEvents();
+
 		// Check if Floodgate is available on the server
 		if (Bukkit.getPluginManager().getPlugin("Floodgate") != null) {
 			usingFloodgateSupport = true;
-			Bukkit.getConsoleSender().sendMessage(MESSAGE_PREFIX + ChatColor.WHITE + "Floodgate support enabled");
+			sendPrefixedMessage("Floodgate support enabled");
 		}
+	}
+
+	/**
+	 * Loads PacketEvents and registers our packet listeners
+	 */
+	private void loadPacketEvents() {
+		PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
+		PacketEvents.getAPI().getSettings().checkForUpdates(false);
+		PacketEvents.getAPI().load();
+
+		final EventManager eventManager = PacketEvents.getAPI().getEventManager();
+		eventManager.registerListener(new PacketLoginLogoutListener(), PacketListenerPriority.MONITOR);
 	}
 	
 	@Override
@@ -93,18 +108,17 @@ public final class AntiCheatReloaded extends JavaPlugin {
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
+
+		// Enable client manager
+		this.clientManager.enable(this);
+
+		// Initialize PacketEvents
+		PacketEvents.getAPI().init();
 		
 		// Create bStats metrics handler
 		getServer().getScheduler().runTaskAsynchronously(instance, () -> {
 			this.metrics = new Metrics(this, METRICS_ID);
-			
-			this.metrics.addCustomChart(new SimplePie("protocollib_version", new Callable<String>() {
-				@Override
-				public String call() throws Exception {
-					return Bukkit.getPluginManager().getPlugin("ProtocolLib").getDescription().getVersion();
-				}
-			}));
-			
+
 			this.metrics.addCustomChart(new SimplePie("floodgate_enabled", new Callable<String>() {
 				@Override
 				public String call() throws Exception {
@@ -115,16 +129,29 @@ public final class AntiCheatReloaded extends JavaPlugin {
 			this.metrics.addCustomChart(new SimplePie("nms_version", new Callable<String>() {
 				@Override
 				public String call() throws Exception {
-					return ReflectionUtils.findNMSVersionString().substring(1).replace('_', '.');
+					return getServer().getBukkitVersion().replace('-', '/').replaceAll("/SNAPSHOT", "");
 				}
 			}));
 		});
+
+		sendPrefixedMessage("Startup complete.");
 	}
 	
 	@Override
 	public void onDisable() {
+		// Shut down metrics
+		if (this.metrics != null) {
+			this.metrics.shutdown();;
+		}
+
 		// Cancel all running tasks
 		getServer().getScheduler().cancelTasks(this);
+
+		// Terminate PacketEvents
+		PacketEvents.getAPI().terminate();
+
+		// Terminate client manager
+		this.clientManager.terminate(this);
 		
 		// Nullify all non-final objects
 		nullify();
@@ -135,23 +162,34 @@ public final class AntiCheatReloaded extends JavaPlugin {
 	 * @return true if compatible - false otherwise
 	 */
 	private boolean checkVersionCompatibility() {
-		final String versionPackage = ReflectionUtils.findNMSVersionString().substring(1).replace('_', '.');
+		final String versionPackage = getServer().getBukkitVersion().replace('-', '/').replaceAll("/SNAPSHOT", "");
 
 		final boolean supported = SUPPORTED_VERSIONS.contains(versionPackage);
 		if (!supported) {
-			Bukkit.getConsoleSender().sendMessage(MESSAGE_PREFIX + ChatColor.RED + "This version of AntiCheatReloaded does not support Minecraft "
-					+ versionPackage.substring(1) + "! Shutting down.");
+			sendPrefixedMessage(ChatColor.DARK_RED + "This version of AntiCheatReloaded does not support Minecraft "
+					+ versionPackage + "! Shutting down.");
 		} else {
-			Bukkit.getConsoleSender().sendMessage(MESSAGE_PREFIX + ("Running on Minecraft " + versionPackage));
+			sendPrefixedMessage("Running on Minecraft " + versionPackage);
 		}
 
 		return supported;
 	}
 
+	/**
+	 * Nullifies all non-final objects
+	 */
 	private void nullify() {
 		instance = null;
 		
 		this.metrics = null;
 	}
-	
+
+	/**
+	 * Sends a message to the console, prepended with the plugin prefix
+	 * @param message The message
+	 */
+	private void sendPrefixedMessage(final String message) {
+		Bukkit.getConsoleSender().sendMessage(MESSAGE_PREFIX + message);
+	}
+
 }
